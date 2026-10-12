@@ -1,0 +1,16 @@
+menu "Link base board"
+
+choice LINK_BOARD_REV
+    prompt "Board revision"
+    default LINK_BOARD_REV_A
+    help
+        Which revision of link-base-brd this firmware is built for.
+        Selects the pin map. A binary built for one revision must not be
+        flashed onto another - the GPIO assignments differ.
+
+config LINK_BOARD_REV_A
+    bool "Revision A"
+
+endchoice
+
+endmenu

@@ -1,0 +1,60 @@
+# Target: ESP32-S3-WROOM-1-N16R8 on link-base-brd
+
+CONFIG_IDF_TARGET="esp32s3"
+
+# --- Console over native USB Serial/JTAG (GPIO19/20) ---
+# printf() and ESP_LOG go to the USB-C port, not to UART0.
+CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y
+CONFIG_ESP_CONSOLE_SECONDARY_NONE=y
+
+# Give the host time to enumerate and open the port before the first
+# log line, otherwise the boot banner is lost.
+CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG_ENABLED=y
+
+# --- Partitions: two OTA slots, see partitions.csv ---
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+
+# --- Flash: 16 MB ---
+CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
+CONFIG_ESPTOOLPY_FLASHMODE_QIO=y
+CONFIG_ESPTOOLPY_FLASHFREQ_80M=y
+
+# --- PSRAM: 8 MB octal ---
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_OCT=y
+CONFIG_SPIRAM_SPEED_80M=y
+
+# --- Logging ---
+CONFIG_LOG_DEFAULT_LEVEL_INFO=y
+
+# --- LVGL 9.5 ---
+# The byte swap is no longer a build option: CONFIG_LV_COLOR_16_SWAP is
+# gone in 9.x. The panel order is declared per display, in code, as
+# LV_COLOR_FORMAT_RGB565_SWAPPED (link_lvgl.c) - LVGL then renders
+# straight into it, with no extra pass per flush. link_display_fill()
+# swaps its own single pixel by hand. Exactly one swap per owner;
+# doing both to the same pixel cancels out and every colour comes out
+# wrong while the image still looks coherent.
+#
+# LV_DRAW_SW_SUPPORT_RGB565_SWAPPED defaults to y, so that format needs
+# no option here.
+
+# link_theme.h uses its own fonts (link-core-ui/src/fonts). Montserrat 14
+# stays only as LVGL's default, which Kconfig cannot point elsewhere.
+CONFIG_LV_FONT_MONTSERRAT_14=y
+# CONFIG_LV_FONT_MONTSERRAT_12 is not set
+# CONFIG_LV_FONT_MONTSERRAT_16 is not set
+# CONFIG_LV_FONT_MONTSERRAT_28 is not set
+
+# LVGL's own mini-printf, not the C library's. The library version
+# pulls in float conversion, which wants more stack than the LVGL task
+# has - a screen formatting a few labels per tick overflows it.
+#
+# The cost is that %f is silently skipped and misaligns every later
+# argument, so no screen may use it: format a decimal by hand from
+# integers instead (see ui_helpers_update_signal_value).
+CONFIG_LV_USE_CLIB_SPRINTF=n
+
+# LVGL objects in PSRAM, see link_lvgl_mem.c.
+CONFIG_LV_USE_CUSTOM_MALLOC=y

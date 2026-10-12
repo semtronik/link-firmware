@@ -1,0 +1,6 @@
+dependencies:
+  # Every other component depends on this one, so the floor set here is
+  # the floor for the repo. 6.0 removed the legacy i2c support in the
+  # LCD IO layer, which is what board_core_bus.c is now written against.
+  # Built and tested on 6.1.
+  idf: ">=6.0"

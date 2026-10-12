@@ -1,0 +1,12 @@
+# Two app slots, so an update can be written while the running firmware
+# keeps working and the board falls back if the new one does not boot.
+# 2 MB each: the binary is around 800 KB, which leaves room for growth.
+#
+# Name,     Type, SubType, Offset,   Size,   Flags
+nvs,        data, nvs,     0x9000,   0x6000,
+phy_init,   data, phy,     0xf000,   0x1000,
+ota_0,      app,  ota_0,   0x10000,  2M,
+ota_1,      app,  ota_1,   0x210000, 2M,
+ota_data,   data, ota,     0x410000, 0x2000,
+# What is left of the 16 MB, for the event log.
+fat,        data, fat,     0x412000, 0xBEE000,

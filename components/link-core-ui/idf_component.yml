@@ -1,0 +1,12 @@
+dependencies:
+  idf: ">=6.0"
+  # FT5426 on the base board, FocalTech FT5x06 family. Pulls
+  # espressif/esp_lcd_touch in as its own dependency.
+  espressif/esp_lcd_touch_ft5x06: "^1"
+  # 9.x. The 8.x branch is dead (last release 8.4.0, March 2024). The
+  # display/indev API this component is built around was rewritten in 9,
+  # so the version floor is a hard one, not a preference.
+  lvgl/lvgl: "~9.5.0"
+  # link_proto.h, a public header of link-core-app, includes cJSON.h.
+  # Registry dependencies are not transitive, so it is declared here too.
+  espressif/cjson: "^1.7.19"

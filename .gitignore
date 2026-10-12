@@ -1,0 +1,56 @@
+# .gitignore — link-firmware (ESP-IDF monorepo)
+#
+# Rule of thumb:
+# - Sources are committed: components/, apps/<name>/main/, CMakeLists,
+#   and sdkconfig.defaults (the settings that define the product).
+# - Anything ESP-IDF regenerates from those is not: build trees, resolved
+#   dependencies, and the effective sdkconfig.
+
+# ── ESP-IDF build output ────────────────────────────────────────────────────
+build/
+
+# ── Resolved configuration ──────────────────────────────────────────────────
+# sdkconfig is generated from sdkconfig.defaults plus whatever menuconfig
+# was used for locally: machine-specific, and it churns on every IDF
+# version bump. sdkconfig.defaults is the one that is committed.
+sdkconfig
+sdkconfig.old
+
+# ── Generated sources ───────────────────────────────────────────────────────
+# Rewritten by CMake on every build, and its whole point is to differ each
+# time: committing it would put a timestamp change in every diff.
+apps/*/main/build_stamp.h
+
+# ── Release output ──────────────────────────────────────────────────────────
+# Built artefacts, reproducible from a tag by tools/release.ps1.
+apps/*/releases/
+
+# ── Managed components ──────────────────────────────────────────────────────
+# Downloaded by the component manager from idf_component.yml. The lock file
+# IS committed: it pins the exact versions the firmware was built against.
+managed_components/
+
+# ── Python tooling ──────────────────────────────────────────────────────────
+# Virtual environments are rebuilt from tools/requirements.txt.
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# ── Recordings ──────────────────────────────────────────────────────────────
+# Pulled off devices by tools/link_rec.py, with the analyses made from them.
+# They hold received payloads and device MACs: never committed, wherever
+# they land.
+recordings/
+*.jsonl
+
+# ── Editor / tooling ────────────────────────────────────────────────────────
+.vscode/
+.clangd
+compile_commands.json
+.cache/
+
+# ── OS noise ────────────────────────────────────────────────────────────────
+Thumbs.db
+desktop.ini
+.DS_Store

@@ -1,0 +1,11 @@
+menu "Link UI"
+
+config LINK_SCREENSHOT
+    bool "Screenshot command"
+    default y
+    help
+        Keeps a copy of the frame on the panel, in PSRAM, and answers the
+        "screenshot" protocol command with it. Costs H_RES x V_RES x 2
+        bytes of PSRAM and one copy per flush.
+
+endmenu

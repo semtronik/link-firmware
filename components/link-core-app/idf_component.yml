@@ -1,0 +1,3 @@
+dependencies:
+  # cJSON left the IDF tree in 6.0 and moved to the registry. Same API.
+  espressif/cjson: "^1.7.19"
